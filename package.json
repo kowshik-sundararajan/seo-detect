@@ -1,0 +1,19 @@
+{
+  "name": "seo-detect",
+  "version": "1.0.0",
+  "description": "A package that scans a HTML file and show all of the SEO defects specified by the user.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kowshik Sundararajan",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
+  "dependencies": {
+    "htmlparser": "^1.7.7"
+  }
+}
