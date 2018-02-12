@@ -2,7 +2,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const htmlparser = require('htmlparser');
+const htmlparser = require('htmlparser2');
 const argv = require('minimist')(process.argv.slice(2));
 
 const INPUT_FILE_PATH = argv.in || './index.html';
@@ -20,36 +20,25 @@ const defaultPaths = {
 };
 const tags = [];
 
-let headTagChildren = [];
 let outputContents = '';
 
 
-const handler = new htmlparser.DefaultHandler((error, dom) => {
-  if (error) console.error(error);
-  else {
-    dom.forEach((item) => {
-      tags.push({
-        name: item.name,
-        attribs: item.attribs || {},
-        children: item.children || [],
-      });
-      if (item.name === 'head') headTagChildren = item.children;
+const parser = new htmlparser.Parser({
+  onopentag: (name, attribs) => {
+    tags.push({
+      name,
+      attribs,
     });
-  }
-}, { ignoreWhitespace: true });
+  },
 
-const parser = new htmlparser.Parser(handler);
+  onend: () => {
+    console.log('Input file has been processed, please check output file.');
+  },
+});
 
 
 const handleExistsRule = (rule) => {
-  let isPresent = false;
-  if (rule.tag === 'title') { // any tag inside head exists
-    if (headTagChildren.length > 0) {
-      isPresent = headTagChildren.filter(child => child.name === 'title').length > 0;
-    }
-  } else {
-    isPresent = tags.filter(child => child.name === rule.tag).length > 0;
-  }
+  const isPresent = tags.filter(tag => tag.name === rule.tag).length > 0;
   if (!isPresent) outputContents += `The HTML does not have a ${rule.tag} tag\n`;
 };
 
@@ -61,14 +50,14 @@ const handleMoreRule = (rule) => {
 
 
 const handleWithoutRule = (rule) => {
-  if (rule.tag === 'meta' && headTagChildren.length > 0) {
-    const isPresent = headTagChildren.filter(child => _.has(child.attribs, rule.attribute)
-      && child.attribs.name === rule.value).length > 0;
+  if (rule.tag === 'meta') {
+    const isPresent = tags.filter(tag => _.has(tag.attribs, rule.attribute)
+      && tag.attribs.name === rule.value).length > 0;
     if (!isPresent) outputContents += `The HTML does not have <${rule.tag} ${rule.attribute}="${rule.value}"> tag\n`;
   } else {
-    const tagCount = tags.filter(tag => tag.name === rule.tag
+    const invalidTagCount = tags.filter(tag => tag.name === rule.tag
       && !_.has(tag.attribs, rule.attribute)).length;
-    if (tagCount > 0) outputContents += `The HTML has ${tagCount} ${rule.tag} tags without ${rule.attribute} attribute\n`;
+    if (invalidTagCount > 0) outputContents += `The HTML has ${invalidTagCount} ${rule.tag} tags without ${rule.attribute} attribute\n`;
   }
 };
 
@@ -83,7 +72,7 @@ const writeToFile = (outputFilePath) => {
 
 const detectSEO = (args) => {
   let { inputFilePath, ruleFilePath, outputFilePath } = defaultPaths;
-  if (args) {
+  if (args.inputFilePath) {
     inputFilePath = args.inputFilePath;
     ruleFilePath = args.ruleFilePath;
     outputFilePath = args.outputFilePath;
@@ -92,7 +81,8 @@ const detectSEO = (args) => {
   fs.readFile(inputFilePath, (error, data) => {
     if (error) console.error(error);
     else {
-      parser.parseComplete(data);
+      parser.write(data);
+      parser.end();
       const rl = readline.createInterface({
         input: fs.createReadStream(ruleFilePath),
         crlfDelay: Infinity,
@@ -139,7 +129,7 @@ const detectSEO = (args) => {
               break;
 
             default:
-              console.log('Invalid rule!');
+              console.error('Invalid rule!');
           }
         }
       });
