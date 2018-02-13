@@ -2,10 +2,8 @@
 A Node.js package that scans a HTML file and show all of the SEO defects specified by the user.
 
 ## Requirements
-```
-node
-npm
-```
+* Node
+* npm
 
 ## Installation
     npm install seo-detect
