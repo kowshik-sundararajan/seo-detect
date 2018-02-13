@@ -43,5 +43,10 @@ There are five default rules specified:
 ```  
 If you want to add/remove rules, you can either edit the `seo-detect/test_files/rule.txt` file or specify your own rule file path.
 
+## Testing
+After cloning the repo and installing the modules, run `npm run test` with or without arguments.
+
+Use a module like [minimist](https://www.npmjs.com/package/minimist) to accept input from the user. An example can be found at [test.js](https://github.com/kowshik-sundararajan/seo-detect/blob/master/lib/test.js)
+
 ## Authors
 [Kowshik Sundararajan](https://github.com/kowshik-sundararajan)
