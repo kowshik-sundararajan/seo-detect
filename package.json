@@ -1,6 +1,6 @@
 {
   "name": "seo-detect",
-  "version": "1.0.1",
+  "version": "1.1",
   "description": "A package that scans a HTML file and show all of the SEO defects specified by the user.",
   "homepage": "https://github.com/kowshik-sundararajan/seo-detect",
   "main": "lib/index.js",
