@@ -50,3 +50,6 @@ Use a module like [minimist](https://www.npmjs.com/package/minimist) to accept i
 
 ## Authors
 [Kowshik Sundararajan](https://github.com/kowshik-sundararajan)
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
