@@ -4,5 +4,5 @@
 <meta name="description"> exists
 <meta name="keywords"> exists
 <meta name="robots" /> exists
-<strong> more 15
-<h1> more 1
+<strong> limit 15
+<h1> limit 1
