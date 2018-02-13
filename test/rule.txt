@@ -1,0 +1,8 @@
+<img> without alt
+<a> without rel
+<title> exists
+<meta name="description"> exists
+<meta name="keywords"> exists
+<meta name="robots" /> exists
+<strong> more 15
+<h1> more 1
